@@ -1,0 +1,16 @@
+{
+  "name": "insta_uslter_api",
+  "version": "1.0.0",
+  "description": "instagram clone",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "instagram-clone",
+    "ulster-university",
+    "project"
+  ],
+  "author": "Faith Olubummo",
+  "license": "MIT"
+}
