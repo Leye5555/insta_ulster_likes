@@ -4,7 +4,6 @@
   "description": "instagram clone",
   "main": "app.js",
   "scripts": {
-    "test": "test",
     "dev": "nodemon app.js",
     "start": "node app.js"
   },
