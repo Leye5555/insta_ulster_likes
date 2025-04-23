@@ -8,12 +8,14 @@ const db = async () =>
       process.env.COSMOSDB_PORT +
       "/" +
       process.env.COSMOSDB_DBNAME +
-      "?ssl=true& replicaSet=globaldb",
+      "?ssl=true&retrywrites=false&maxIdleTimeMS=120000&appName=@" +
+      process.env.COSMOSDB_APPNAME +
+      "@",
     {
-      auth: {
-        username: process.env.COSMOSDB_USER,
-        password: process.env.COSMOSDB_PASSWORD,
-      },
+      // auth: {
+      //   username: process.env.COSMOSDB_USER,
+      //   password: process.env.COSMOSDB_PASSWORD,
+      // },
       useNewUrlParser: true,
       useUnifiedTopology: true,
       retryWrites: false,
