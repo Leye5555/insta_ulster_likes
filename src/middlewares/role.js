@@ -1,12 +1,8 @@
 module.exports = (roles) => (req, res, next) => {
-  // string of roles ['admin', 'user']
-  // stop users without appropriate role
+  // only admins and super admins can create, edit and delete posts
   if (!roles.includes(req.user.role)) {
     return res.status(403).json({ error: "Forbidden" });
   }
-  // stop users from updating other users
-  if (req.user.role === "user" && req.params.id !== req.user._id) {
-    return res.status(403).json({ error: "Forbidden" });
-  }
+
   next();
 };

@@ -34,7 +34,7 @@ const logger = createLogger({
   ],
 });
 
-exports.usersLogger = createLogger({
+exports.postsLogger = createLogger({
   levels: config.syslog.levels,
   format: format.combine(
     format.timestamp({ format: "MMM-DD-YYYY HH:mm:ss" }),
