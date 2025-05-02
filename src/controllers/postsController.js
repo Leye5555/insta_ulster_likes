@@ -6,11 +6,38 @@ const {
   getAzureBlobSAS,
 } = require("../services/azureBlob.js");
 const fs = require("node:fs");
+
+const { default: axios } = require("axios");
+const API_URL = process.env.API_URL_USER || "http://localhost:8000";
+const getUser = async ({ id, token }) => {
+  if (!token) {
+    throw new Error("No token");
+  }
+
+  const user = await axios.get(`${API_URL}/v1/users/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  console.log(user.data);
+  return user.data;
+};
 exports.getPosts = async (req, res) => {
   try {
     const posts = await Post.find({});
-    res.status(200).json({ posts, sas_token: getAzureBlobSAS()?.toString() });
+    const mappedPosts = await Promise.all(
+      posts.map(async (post) => {
+        const user = await getUser({ id: post.userId, token: req.token });
+        return { ...post._doc, user };
+      })
+    );
+
+    res
+      .status(200)
+      .json({
+        posts: mappedPosts.reverse(),
+        sas_token: getAzureBlobSAS()?.toString(),
+      });
   } catch (err) {
+    console.log(err);
     res.status(400).json({ error: err.message });
   }
 };
@@ -65,7 +92,7 @@ exports.createPost = async (req, res) => {
     res.status(200).json({ ...post.toJSON() });
 
     // clean up temp upload directory
-    if (req.file?.post_image) {
+    if (req.files?.post_image) {
       try {
         fs.unlink(req?.files?.post_image[0]?.path, () =>
           console.log("'%s' was deleted", req?.files?.post_image[0]?.path)
@@ -75,6 +102,7 @@ exports.createPost = async (req, res) => {
       }
     }
   } catch (err) {
+    console.log(err);
     res.status(400).json({ error: err.message });
   }
 };
@@ -83,9 +111,19 @@ exports.getPost = async (req, res) => {
   try {
     const postId = req.params.id;
     const post = await Post.findOne({ _id: postId });
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+    const user = await getUser({
+      id: post.userId,
+      token: req.token,
+    });
     res.status(200).json({
-      ...post.toJSON(),
-      img_url: `${post.img_url}?${getAzureBlobSAS()}`,
+      post: {
+        ...post.toJSON(),
+        img_url: `${post.img_url}?${getAzureBlobSAS().toString()}`,
+      },
+      user,
     });
   } catch (err) {
     res.status(400).json({ error: err.message });

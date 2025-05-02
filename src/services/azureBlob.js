@@ -23,7 +23,7 @@ function getAzureBlobSAS() {
   const sas = generateBlobSASQueryParameters(
     {
       containerName: process.env.AZURE_CONTAINER_NAME,
-      permissions: "rwcdl",
+      permissions: "r",
       startsOn: new Date(),
       expiresOn: new Date(new Date().getTime() + 60 * 60 * 1000), // 1 hour
     },

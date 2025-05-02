@@ -40,7 +40,7 @@ const { multerPostUpload } = require("../services/multer");
  *                         type: string
  *                       content:
  *                         type: string
- *                       post_image:
+ *                       img_url:
  *                         type: string
  *                       createdAt:
  *                         type: string
@@ -158,7 +158,7 @@ router.get("/posts", auth, getPosts);
  *                       type: string
  *                     content:
  *                       type: string
- *                     post_image:
+ *                     img_url:
  *                       type: string
  *                     createdAt:
  *                       type: string
@@ -273,7 +273,7 @@ router.post(
  *                       type: string
  *                     content:
  *                       type: string
- *                     post_image:
+ *                     img_url:
  *                       type: string
  *                     createdAt:
  *                       type: string
@@ -395,7 +395,7 @@ router.get("/posts/:id", auth, getPost);
  *                       type: string
  *                     content:
  *                       type: string
- *                     post_image:
+ *                     img_url:
  *                       type: string
  *                     createdAt:
  *                       type: string
@@ -504,7 +504,7 @@ router.put("/posts/:id", auth, roles(["admin", "super_admin"]), updatePost);
  *                       type: string
  *                     content:
  *                       type: string
- *                     post_image:
+ *                     img_url:
  *                       type: string
  *                     createdAt:
  *                       type: string
